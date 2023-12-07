@@ -13,23 +13,21 @@
                 .Replace("six", "6")
                 .Replace("seven", "7")
                 .Replace("eight", "e8t")
-                .Replace("nine", "9e")
-            ).Sum(l => l.First(i => char.IsDigit(i)) * 10  + l.Last(i => char.IsDigit(i)) - 528),
+                .Replace("nine", "9e") )
+            .Sum(l => l.First(i => char.IsDigit(i)) * 10  + l.Last(i => char.IsDigit(i)) - 528),
     "02.1: " + 
         File.ReadAllLines("input2.txt")
             .Where(line =>
                 System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sblue").All(i => int.Parse(i.Value[0..^5]) <= 14) &&
                 System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sred").All(i => int.Parse(i.Value[0..^4]) <= 12) &&
                 System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sgreen").All(i => int.Parse(i.Value[0..^6]) <= 13))
-            .Select(line => int.Parse(line[5..line.IndexOf(':')]))
-            .Sum(),
+            .Sum(line => int.Parse(line[5..line.IndexOf(':')])),
     "02.2: " +
         File.ReadAllLines("input2.txt")
-            .Select(line =>
+            .Sum(line =>
                 System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sblue").Max(i => int.Parse(i.Value[0..^5])) *
                 System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sred").Max(i => int.Parse(i.Value[0..^4])) *
-                System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sgreen").Max(i => int.Parse(i.Value[0..^6])))
-            .Sum(),
+                System.Text.RegularExpressions.Regex.Matches(line, "\\d+\\sgreen").Max(i => int.Parse(i.Value[0..^6]))),
     "03.1: " + 
         new Func<string, long>(str =>
             System.Text.RegularExpressions.Regex.Matches(str, "[0-9]+")
@@ -38,8 +36,8 @@
                         .Concat(Enumerable.Range(i.Index-142, i.Length+2))
                         .Concat(Enumerable.Range(i.Index+140, i.Length+2))
                     .Select(i => (str[i], i))
-                    .Any(i => !(i.Item1 == '.' || (i.Item1 >= 48 && i.Item1 <= 57)))
-                ).Sum(i => int.Parse(i.Value))
+                    .Any(i => !(i.Item1 == '.' || (i.Item1 >= 48 && i.Item1 <= 57))) )
+                .Sum(i => int.Parse(i.Value))
         )(new string('.', 141) + string.Join('.', File.ReadAllLines("input3.txt")) + new string('.', 141)),
     "03.2: " +
         new Func<string, Dictionary<int, string>, long>((str, matches) =>
@@ -61,30 +59,23 @@
         File.ReadAllLines("input4.txt")
             .Select(line => 
                 (new HashSet<int>(line[(line.IndexOf(':') + 1)..line.IndexOf('|')].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))),
-                new HashSet<int>(line[(line.IndexOf('|') + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))))
-                )
+                new HashSet<int>(line[(line.IndexOf('|') + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i)))) )
             .Select(item => item.Item2.Count(i => item.Item1.Contains(i)))
             .Where(i => i != 0)
             .Sum(i => Math.Pow(2, i - 1)),
     "04.2: ",
     "05.1: " +
         new Func<List<List<(long, long, long)>>, long>(maps =>
-            File.ReadLines("input5.txt").First()[7..].Split(' ').Select(i => long.Parse(i))
-            .Select(i => maps[0].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[0].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[1].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[1].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[2].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[2].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[3].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[3].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[4].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[4].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[5].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[5].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Select(i => maps[6].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - 
-                            maps[6].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
-            .Min()
+            File.ReadLines("input5.txt").First()[7..].Split(' ')
+                .Select(i => long.Parse(i))
+                .Select(i => maps[0].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[0].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[1].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[1].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[2].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[2].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[3].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[3].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[4].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[4].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[5].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[5].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Select(i => maps[6].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item1 + i - maps[6].First(m => i >= m.Item2 && i < (m.Item2 + m.Item3)).Item2)
+                .Min()
         )(File.ReadAllLines("input5.txt")
             .Skip(1)
             .Where(i => !string.IsNullOrWhiteSpace(i))
@@ -95,8 +86,8 @@
                 .Select(j => j.Split(' ', StringSplitOptions.RemoveEmptyEntries))
                 .Select(k => (long.Parse(k[0]), long.Parse(k[1]), long.Parse(k[2])))
                 .Concat(new List<(long, long, long)>(){(0, 0, long.MaxValue)})
-                .ToList()
-            ).ToList()),
+                .ToList() )
+            .ToList()),
     "05.2: ",
     "06.1: " +
         new Func<List<long>, List<long>, long>((times, dists) =>
@@ -118,10 +109,8 @@
                 (   item.Item1, 
                     new Func<List<IGrouping<int, int>>, int>(cards =>
                         cards.Count == 1 ? 6 :
-                        cards.Count == 2 ?
-                            (cards.First().Count() == 4 || cards.First().Count() == 1 ? 5 : 4) :
-                        cards.Count == 3 ?
-                            (cards.ToList()[0].Count() == 3 || cards.ToList()[1].Count() == 3 || cards.ToList()[2].Count() == 3 ? 3 : 2) :
+                        cards.Count == 2 ? (cards.First().Count() == 4 || cards.First().Count() == 1 ? 5 : 4) :
+                        cards.Count == 3 ? (cards.ToList()[0].Count() == 3 || cards.ToList()[1].Count() == 3 || cards.ToList()[2].Count() == 3 ? 3 : 2) :
                         cards.Count == 4 ? 1 : 0
                     )(new List<IGrouping<int, int>>(item.Item2.GroupBy(i => i))),
                     item.Item2[0] * 50625 + item.Item2[1] * 3375 + item.Item2[2] * 225 + item.Item2[3] * 15 + item.Item2[4]
@@ -137,12 +126,10 @@
                 line[..5].Select(c => c == 'A' ? 14 : c == 'K' ? 13 :  c == 'Q' ? 12 : c == 'J' ? 1 : c == 'T' ? 10 : c - 48).ToArray() ) )
             .Select(item =>
                 (item.Item1, 
-                    new Func<List<IGrouping<int, int>>, int, int>((cards, numNonJ) =>
-                        numNonJ == 0 || cards.Count == 1 ? 6 :
-                        cards.Count == 2 ?
-                            (cards.First().Count() == (numNonJ - 1) || cards.Last().Count() == (numNonJ - 1)  ? 5 : 4) :
-                        cards.Count == 3 ?
-                            (cards.ToList()[0].Count() == (numNonJ - 2)  || cards.ToList()[1].Count() == (numNonJ - 2) || cards.ToList()[2].Count() == (numNonJ - 2) ? 3 : 2) :
+                    new Func<List<IGrouping<int, int>>, int, int>((cards, notJ) =>
+                        notJ == 0 || cards.Count == 1 ? 6 :
+                        cards.Count == 2 ? (cards.First().Count() == (notJ - 1) || cards.Last().Count() == (notJ - 1)  ? 5 : 4) :
+                        cards.Count == 3 ? (cards.ToList()[0].Count() == (notJ - 2)  || cards.ToList()[1].Count() == (notJ - 2) || cards.ToList()[2].Count() == (notJ - 2) ? 3 : 2) :
                         cards.Count == 4 ? 1 : 0
                     )(new List<IGrouping<int, int>>(item.Item2.Where(i => i != 1).GroupBy(i => i)), item.Item2.Count(i => i != 1)),
                     item.Item2[0] * 50625 + item.Item2[1] * 3375 + item.Item2[2] * 225 + item.Item2[3] * 15 + item.Item2[4]
@@ -151,5 +138,4 @@
             .ThenBy(i => i.Item3)
             .Select(i => i.Item1)
             .ToList())
-
 }));
