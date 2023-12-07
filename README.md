@@ -2,4 +2,9 @@
 
 Goal is to solve as much of Advent of Code 2023 using only a single semicolon anywhere in the code.
 
-Note: Currently 1 of the days I was able to solve by adding a simple (but powerful) 'linq like' extension method.  Decided to include it and just note where I had to slightly cheat on it.
+Requirements:
+* Only 1 semicolon
+* Runs quickly/efficiently
+* Uses only methods built into .NET**
+
+** OK, I already cheated in 1 spot and used a custom extension method (its a simple but powerful 'linq like' method).  Plan to only 'cheat' if absolutely necessary, and if added function still keeps with the spirit of the challenge.
