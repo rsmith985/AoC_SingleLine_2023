@@ -63,7 +63,19 @@
             .Select(item => item.Item2.Count(i => item.Item1.Contains(i)))
             .Where(i => i != 0)
             .Sum(i => Math.Pow(2, i - 1)),
-    "04.2: ",
+    "04.2: " +
+        new Func<List<int>, List<int>, long>((data, copies) =>
+            Enumerable.Range(0, data.Count())
+                .Perform(i => Enumerable.Range(0, data[i]).Perform(j => copies[i+j+1] += copies[i]))
+                .Sum(i => copies[i])
+            )(File.ReadAllLines("input4.txt")
+                .Select(line => 
+                    (new HashSet<int>(line[(line.IndexOf(':') + 1)..line.IndexOf('|')].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))),
+                     new HashSet<int>(line[(line.IndexOf('|') + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))))
+                    )
+                .Select(item => item.Item2.Count(i => item.Item1.Contains(i))).ToList(),
+            new int[File.ReadAllLines("input4.txt").Count()].Select(i => 1).ToList())
+            + "      **Cheat Code Used - Uses extension method that is not part of standard .NET",
     "05.1: " +
         new Func<List<List<(long, long, long)>>, long>(maps =>
             File.ReadLines("input5.txt").First()[7..].Split(' ')
@@ -88,7 +100,7 @@
                 .Concat(new List<(long, long, long)>(){(0, 0, long.MaxValue)})
                 .ToList() )
             .ToList()),
-    "05.2: ",
+    "05.2:              **Currently no solutions that are fast enough :'(",
     "06.1: " +
         new Func<List<long>, List<long>, long>((times, dists) =>
             Enumerable.Range(0, times.Count).Select(i => 
@@ -139,3 +151,18 @@
             .Select(i => i.Item1)
             .ToList())
 }));
+
+
+/// <summary>
+/// Adds functions that don't exist in .NET but in general keep with the spirit of the challenge.
+/// Any solutions that require a cheat code will be noted.
+/// </summary>
+public static class CheatCodes
+{
+    public static IEnumerable<T> Perform<T>(this IEnumerable<T> items, Action<T> action) 
+    { 
+        foreach(var item in items)  
+            action(item);
+        return items;
+    }
+}
