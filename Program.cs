@@ -75,7 +75,7 @@
                     )
                 .Select(item => item.Item2.Count(i => item.Item1.Contains(i))).ToList(),
             new int[File.ReadAllLines("input4.txt").Count()].Select(i => 1).ToList())
-            + "      **Cheat Code Used - Uses extension method that is not part of standard .NET",
+            + "        **Cheat Code Used",
     "05.1: " +
         new Func<List<List<(long, long, long)>>, long>(maps =>
             File.ReadLines("input5.txt").First()[7..].Split(' ')
@@ -100,14 +100,14 @@
                 .Concat(new List<(long, long, long)>(){(0, 0, long.MaxValue)})
                 .ToList() )
             .ToList()),
-    "05.2:              **Currently no solutions that are fast enough :'(",
+    "05.2:                **Currently no solutions that are fast enough :'(",
     "06.1: " +
         new Func<List<long>, List<long>, long>((times, dists) =>
             Enumerable.Range(0, times.Count).Select(i => 
                 ((times[i] / 2) - Enumerable.Range(1, int.MaxValue).First(t => (times[i] - t) * t > dists[i]) + 1) * 2 + ((times[i] % 2 == 0) ? -1 : 0))
                 .Aggregate((long)1, (r, i) => r*i)
         )(File.ReadAllLines("input6.txt")[0][5..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => long.Parse(i)).ToList(), 
-        File.ReadAllLines("input6.txt")[1][9..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => long.Parse(i)).ToList()),
+          File.ReadAllLines("input6.txt")[1][9..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => long.Parse(i)).ToList()),
     "06.2: " +
         new Func<long, long, long>((time, dist) =>
             ((time / 2) - Enumerable.Range(1, int.MaxValue).First(t => (time - t) * t > dist) + 1) * 2 + ((time % 2 == 0) ? -1 : 0)
@@ -133,23 +133,47 @@
             .ToList()),
     "07.2: " + 
         new Func<List<long>, long>(bids => Enumerable.Range(0, bids.Count).Sum(i => (i + 1) * bids[i])
-        )(File.ReadAllLines("input7.txt")
-            .Select(line => ( long.Parse(line[5..]),
-                line[..5].Select(c => c == 'A' ? 14 : c == 'K' ? 13 :  c == 'Q' ? 12 : c == 'J' ? 1 : c == 'T' ? 10 : c - 48).ToArray() ) )
-            .Select(item =>
-                (item.Item1, 
-                    new Func<List<IGrouping<int, int>>, int, int>((cards, notJ) =>
-                        notJ == 0 || cards.Count == 1 ? 6 :
-                        cards.Count == 2 ? (cards.First().Count() == (notJ - 1) || cards.Last().Count() == (notJ - 1)  ? 5 : 4) :
-                        cards.Count == 3 ? (cards.ToList()[0].Count() == (notJ - 2)  || cards.ToList()[1].Count() == (notJ - 2) || cards.ToList()[2].Count() == (notJ - 2) ? 3 : 2) :
-                        cards.Count == 4 ? 1 : 0
-                    )(new List<IGrouping<int, int>>(item.Item2.Where(i => i != 1).GroupBy(i => i)), item.Item2.Count(i => i != 1)),
-                    item.Item2[0] * 50625 + item.Item2[1] * 3375 + item.Item2[2] * 225 + item.Item2[3] * 15 + item.Item2[4]
-                ) )
-            .OrderBy(i => i.Item2)
-            .ThenBy(i => i.Item3)
-            .Select(i => i.Item1)
-            .ToList())
+            )(File.ReadAllLines("input7.txt")
+                .Select(line => ( long.Parse(line[5..]),
+                    line[..5].Select(c => c == 'A' ? 14 : c == 'K' ? 13 :  c == 'Q' ? 12 : c == 'J' ? 1 : c == 'T' ? 10 : c - 48).ToArray() ) )
+                .Select(item =>
+                    (item.Item1, 
+                        new Func<List<IGrouping<int, int>>, int, int>((c, n) =>
+                            n == 0 || c.Count == 1 ? 6 :
+                            c.Count == 2 ? (c.First().Count() == (n - 1) || c.Last().Count() == (n - 1)  ? 5 : 4) :
+                            c.Count == 3 ? (c.ToList()[0].Count() == (n - 2)  || c.ToList()[1].Count() == (n - 2) || c.ToList()[2].Count() == (n - 2) ? 3 : 2) :
+                            c.Count == 4 ? 1 : 0
+                        )(new List<IGrouping<int, int>>(item.Item2.Where(i => i != 1).GroupBy(i => i)), item.Item2.Count(i => i != 1)),
+                        item.Item2[0] * 50625 + item.Item2[1] * 3375 + item.Item2[2] * 225 + item.Item2[3] * 15 + item.Item2[4]
+                    ) )
+                .OrderBy(i => i.Item2)
+                .ThenBy(i => i.Item3)
+                .Select(i => i.Item1)
+                .ToList()),
+    "08.1: " + 
+        new Func<List<int>, Dictionary<string, string[]>, List<string>, int>((path, lookup, route) =>
+            Enumerable.Range(1, route.Count - 1)
+                .Perform(i => route[i] = lookup[route[i-1]][path[(i - 1) % path.Count]])
+                .First(i => route[i] == "ZZZ") )
+            (File.ReadAllLines("input8.txt")[0].Select(c => c == 'L' ? 0 : 1).ToList(), 
+             File.ReadAllLines("input8.txt").Skip(2).ToDictionary(line => line[..3], line => new string[]{line[7..10], line[12..15]}),
+             new string[100000].Select(i => "AAA").ToList())
+            + "          **Cheat Code Used",
+    "08.2: " + 
+        new Func<List<int>, Dictionary<string, string[]>, ulong>((path, lookup) =>
+            lookup.Keys.Where(i => i.EndsWith("A"))
+                .Select(start => new Func<List<int>, Dictionary<string, string[]>, List<string>, int>((path, lookup, route) =>
+                    Enumerable.Range(1, route.Count - 1)
+                        .Perform(i => route[i] = lookup[route[i-1]][path[(i - 1) % path.Count]])
+                        .First(i => route[i].EndsWith("Z")) )
+                    (path, lookup, new string[100000].Select(i => start).ToList()) )
+                .Select(i => (ulong)i)
+                .Aggregate((ulong)1, (a, b) => a > b ? 
+                    (a / (ulong)System.Numerics.BigInteger.GreatestCommonDivisor(a, b)) * b : 
+                    (b / (ulong)System.Numerics.BigInteger.GreatestCommonDivisor(a, b)) * a))
+            (File.ReadAllLines("input8.txt")[0].Select(c => c == 'L' ? 0 : 1).ToList(), 
+             File.ReadAllLines("input8.txt").Skip(2).ToDictionary(line => line[..3], line => new string[]{line[7..10], line[12..15]}) )
+            + " **Cheat Code Used"
 }));
 
 
