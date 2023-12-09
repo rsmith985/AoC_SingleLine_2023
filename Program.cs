@@ -99,7 +99,47 @@
                 .Concat(new List<(long, long, long)>(){(0, 0, long.MaxValue)})
                 .ToList() )
             .ToList()),
-    "05.2:                **Currently no solutions that are fast enough :'(",
+    "05.2: " +
+        new Func<List<List<(long, long, long)>>, long>(maps =>
+            File.ReadLines("input5.txt")
+                .First()[7..]
+                .Split(' ')
+                .Select(i => long.Parse(i))
+                .Chunk(2)
+                .Select(i => (i[0], i[0] + i[1]))
+                .Select(seedRange =>
+                    Enumerable.Range(1, 1000).Aggregate((seedRange.Item1, seedRange.Item2, long.MaxValue, long.MaxValue), (a, b) =>
+                        a.Item1 >= a.Item2 ? a :
+                            new Func<(long, long), (long, long, long, long)>(item =>
+                                (a.Item1 + item.Item2, a.Item2, item.Item1, item.Item1 < a.Item4 ? item.Item1 : a.Item4)
+                            )(maps.Aggregate((a.Item1, long.MaxValue), (x, m) =>
+                                    new Func<(long dst, long src, long len), (long, long)>(range =>
+                                        (range.dst + (x.Item1 - range.src),
+                                        Math.Min(x.Item2, 
+                                            range.len == long.MaxValue ? 
+                                                (m.Where(i => i.Item2 > x.Item1).Any() ? m.Where(i => i.Item2 > x.Item1).Min(i => i.Item2) : 
+                                                long.MaxValue) : 
+                                                range.len - (x.Item1 - range.src)
+                                                )
+                                        )
+                                    ) (m.First(m => x.Item1 >= m.Item2 && x.Item1 < (m.Item2 + m.Item3))) 
+                                )
+                            )
+                        )
+                    ).Min(i => i.Item4)
+            )
+            (File.ReadAllLines("input5.txt")
+                .Skip(1)
+                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .Select(i => i.Contains(':') ? ":" : i)
+                .Aggregate("", (i1, i2) => i1 + i2 + "|")
+                .Split(":|", StringSplitOptions.RemoveEmptyEntries)
+                .Select(i => i.Split('|', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(j => j.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                    .Select(k => (long.Parse(k[0]), long.Parse(k[1]), long.Parse(k[2])))
+                    .Concat(new List<(long, long, long)>(){(0, 0, long.MaxValue)})
+                    .ToList()
+                ).ToList()),
     "06.1: " +
         new Func<List<long>, List<long>, long>((times, dists) =>
             Enumerable.Range(0, times.Count).Select(i => 
