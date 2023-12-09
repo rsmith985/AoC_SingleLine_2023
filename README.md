@@ -7,4 +7,14 @@ Requirements:
 * Runs quickly/efficiently
 * Uses only methods built into .NET**
 
-** OK, I ended up adding and using a single small extension method to make many of the later days possible.  It breaks the rules but keeps the spirit of the challenge alive.
+** To keep my sanity (see Day 5 part 2) I have allowed myself to 'add' a method to linq to make some things easier.  I think they could be accomplished through other means, but as the days get harder it gets very difficult and I need a shortcut.
+
+Days 1-7 have been solved without the method.  After day 8 I'm allowing myself to use it.
+Added method:
+>   public static IEnumerable<T> Perform<T>(this IEnumerable<T> items, Action<T> action) 
+>    { 
+>        foreach(var item in items)  
+>            action(item);
+>        return items;
+>    }
+

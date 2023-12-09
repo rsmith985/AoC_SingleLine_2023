@@ -66,9 +66,9 @@
     "04.2: " +
         new Func<List<int>, List<int>, long>((data, copies) =>
             Enumerable.Range(0, data.Count())
-                .Perform(i => Enumerable.Range(0, data[i]).Perform(j => copies[i+j+1] += copies[i]))
-                .Sum(i => copies[i])
-            )(File.ReadAllLines("input4.txt")
+                .Aggregate((0, copies), (a, b) => (a.Item1+1, a.copies.Select((c, idx) => idx > a.Item1 && idx <= a.Item1 + data[a.Item1] ? c + a.copies[a.Item1] : c).ToList()))
+                .copies.Sum())
+            (File.ReadAllLines("input4.txt")
                 .Select(line => 
                     (new HashSet<int>(line[(line.IndexOf(':') + 1)..line.IndexOf('|')].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))),
                      new HashSet<int>(line[(line.IndexOf('|') + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))))
@@ -235,8 +235,7 @@
 
 
 /// <summary>
-/// Adds functios that don't exist in .NET, in order to make a lot of the later puzzles possible.
-/// It is a simple but powerful function, I think it still keeps with the spirit of the challenge though.
+/// Adds functios that don't exist in .NET, in order to make harder puzzles possible without losing my mind.
 /// </summary>
 public static class CheatCodes
 {
