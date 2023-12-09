@@ -11,10 +11,11 @@ Requirements:
 
 Days 1-7 have been solved without the method.  After day 8 I'm allowing myself to use it.
 Added method:
+'''
     public static IEnumerable<T> Perform<T>(this IEnumerable<T> items, Action<T> action) 
     { 
         foreach(var item in items)  
             action(item);
         return items;
     }
-
+'''
