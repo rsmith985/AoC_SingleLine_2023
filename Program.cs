@@ -74,8 +74,7 @@
                      new HashSet<int>(line[(line.IndexOf('|') + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i))))
                     )
                 .Select(item => item.Item2.Count(i => item.Item1.Contains(i))).ToList(),
-            new int[File.ReadAllLines("input4.txt").Count()].Select(i => 1).ToList())
-            + "        **Cheat Code Used",
+            new int[File.ReadAllLines("input4.txt").Count()].Select(i => 1).ToList()),
     "05.1: " +
         new Func<List<List<(long, long, long)>>, long>(maps =>
             File.ReadLines("input5.txt").First()[7..].Split(' ')
@@ -157,8 +156,7 @@
                 .First(i => route[i] == "ZZZ") )
             (File.ReadAllLines("input8.txt")[0].Select(c => c == 'L' ? 0 : 1).ToList(), 
              File.ReadAllLines("input8.txt").Skip(2).ToDictionary(line => line[..3], line => new string[]{line[7..10], line[12..15]}),
-             new string[100000].Select(i => "AAA").ToList())
-            + "          **Cheat Code Used",
+             new string[100000].Select(i => "AAA").ToList()),
     "08.2: " + 
         new Func<List<int>, Dictionary<string, string[]>, ulong>((path, lookup) =>
             lookup.Keys.Where(i => i.EndsWith("A"))
@@ -172,14 +170,33 @@
                     (a / (ulong)System.Numerics.BigInteger.GreatestCommonDivisor(a, b)) * b : 
                     (b / (ulong)System.Numerics.BigInteger.GreatestCommonDivisor(a, b)) * a))
             (File.ReadAllLines("input8.txt")[0].Select(c => c == 'L' ? 0 : 1).ToList(), 
-             File.ReadAllLines("input8.txt").Skip(2).ToDictionary(line => line[..3], line => new string[]{line[7..10], line[12..15]}) )
-            + " **Cheat Code Used"
+             File.ReadAllLines("input8.txt").Skip(2).ToDictionary(line => line[..3], line => new string[]{line[7..10], line[12..15]}) ),
+    "09.1: " + 
+        File.ReadAllLines("input9.txt")
+            .Select(i => i.Split(' ').Select(i => long.Parse(i)).ToList())
+            .Sum(seq => new Func<List<long>, List<List<long>>, long>((seq, lists) =>
+                    Enumerable.Range(1, lists.Count-1)
+                        .Perform(i => lists[i] = lists[i-1].Zip(lists[i-1].Skip(1), (a, b) => b-a).ToList())
+                        .Select(i => lists[i-1].Last())
+                        .Reverse()
+                        .Aggregate((long)0, (a, b) => a + b)
+                )(seq, Enumerable.Range(0, seq.Count-1).Select(i => seq).ToList()) ),
+    "09.2: " + 
+        File.ReadAllLines("input9.txt")
+            .Select(i => i.Split(' ').Select(i => long.Parse(i)).Reverse().ToList())
+            .Sum(seq => new Func<List<long>, List<List<long>>, long>((seq, lists) =>
+                    Enumerable.Range(1, lists.Count-1)
+                        .Perform(i => lists[i] = lists[i-1].Zip(lists[i-1].Skip(1), (a, b) => b-a).ToList())
+                        .Select(i => lists[i-1].Last())
+                        .Reverse()
+                        .Aggregate((long)0, (a, b) => a + b)
+                )(seq, Enumerable.Range(0, seq.Count-1).Select(i => seq).ToList()) )
 }));
 
 
 /// <summary>
-/// Adds functions that don't exist in .NET but in general keep with the spirit of the challenge.
-/// Any solutions that require a cheat code will be noted.
+/// Adds functios that don't exist in .NET, in order to make a lot of the later puzzles possible.
+/// It is a simple but powerful function, I think it still keeps with the spirit of the challenge though.
 /// </summary>
 public static class CheatCodes
 {
