@@ -7,4 +7,4 @@ Requirements:
 * Runs quickly/efficiently
 * Uses only methods built into .NET**
 
-** OK, I already cheated and used a custom extension method (its a simple but powerful 'linq like' method).  Plan to only 'cheat' if absolutely necessary.  As the challenges get more complicated small cheats will likely be required.  Any solution that uses a 'cheat code' funciton will have a note added to it.
+** OK, I ended up adding and using a single small extension method to make many of the later days possible.  It breaks the rules but keeps the spirit of the challenge alive.
