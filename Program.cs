@@ -230,7 +230,67 @@
                         .Select(i => lists[i-1].Last())
                         .Reverse()
                         .Aggregate((long)0, (a, b) => a + b)
-                )(seq, Enumerable.Range(0, seq.Count-1).Select(i => seq).ToList()) )
+                )(seq, Enumerable.Range(0, seq.Count-1).Select(i => seq).ToList()) ),
+    "10.1: I think this is possible, just haven't attempted yet",
+    "10.2: This one would likely be very difficult, not sure if have time for it",
+    "11.1: " + 
+        new Func<(HashSet<int>, HashSet<int>, List<System.Drawing.Point>), long>(input =>
+            Enumerable.Range(0, input.Item3.Count-1)
+                .SelectMany(i1 => 
+                    Enumerable.Range(i1+1, input.Item3.Count-i1-1)
+                        .Select(i2 => (
+                            new System.Drawing.Point(input.Item3[i1].X < input.Item3[i2].X ? input.Item3[i1].X : input.Item3[i2].X, 
+                                      input.Item3[i1].Y < input.Item3[i2].Y ? input.Item3[i1].Y : input.Item3[i2].Y),
+                            new System.Drawing.Point(input.Item3[i1].X > input.Item3[i2].X ? input.Item3[i1].X : input.Item3[i2].X, 
+                                      input.Item3[i1].Y > input.Item3[i2].Y ? input.Item3[i1].Y : input.Item3[i2].Y)
+                            )) )
+                .Sum(pair => 
+                    (long)pair.Item2.X - (long)pair.Item1.X + 
+                        ((pair.Item2.X - pair.Item1.X < 1) ? 0 : 
+                            (long)Enumerable.Range(pair.Item1.X + 1, (pair.Item2.X - pair.Item1.X - 1))
+                                .Where(i => input.Item2.Contains(i)).Count()) +
+                    (long)pair.Item2.Y - (long)pair.Item1.Y + 
+                        ((pair.Item2.Y - pair.Item1.Y < 1) ? 0 : 
+                            (long)Enumerable.Range(pair.Item1.Y + 1, (pair.Item2.Y - pair.Item1.Y - 1))
+                                .Where(i => input.Item1.Contains(i)).Count())
+            ))(new Func<string[], (HashSet<int>, HashSet<int>, List<System.Drawing.Point>)>(input =>
+                (   new HashSet<int>(Enumerable.Range(0, input.Length).Where(i => input[i].All(c => c == '.'))),
+                    new HashSet<int>(Enumerable.Range(0, input[0].Length).Where(i => input.All(line => line[i] == '.'))),
+                    Enumerable.Range(0, input.Length * input[0].Length)
+                        .Select(i => new System.Drawing.Point(i % input[0].Length, i/input[0].Length))
+                        .Where(p => input[p.Y][p.X] == '#')
+                        .ToList()
+                ))(File.ReadAllLines("input11.txt"))
+            ),
+    "11.2: " + 
+        new Func<(HashSet<int>, HashSet<int>, List<System.Drawing.Point>), long>(input =>
+            Enumerable.Range(0, input.Item3.Count-1)
+                .SelectMany(i1 => 
+                    Enumerable.Range(i1+1, input.Item3.Count-i1-1)
+                        .Select(i2 => (
+                            new System.Drawing.Point(input.Item3[i1].X < input.Item3[i2].X ? input.Item3[i1].X : input.Item3[i2].X, 
+                                      input.Item3[i1].Y < input.Item3[i2].Y ? input.Item3[i1].Y : input.Item3[i2].Y),
+                            new System.Drawing.Point(input.Item3[i1].X > input.Item3[i2].X ? input.Item3[i1].X : input.Item3[i2].X, 
+                                      input.Item3[i1].Y > input.Item3[i2].Y ? input.Item3[i1].Y : input.Item3[i2].Y)
+                            )) )
+                .Sum(pair => 
+                    (long)pair.Item2.X - (long)pair.Item1.X + 
+                        ((pair.Item2.X - pair.Item1.X < 1) ? 0 : 
+                            (long)Enumerable.Range(pair.Item1.X + 1, (pair.Item2.X - pair.Item1.X - 1))
+                                .Where(i => input.Item2.Contains(i)).Sum(i => 999999)) +
+                    (long)pair.Item2.Y - (long)pair.Item1.Y + 
+                        ((pair.Item2.Y - pair.Item1.Y < 1) ? 0 : 
+                            (long)Enumerable.Range(pair.Item1.Y + 1, (pair.Item2.Y - pair.Item1.Y - 1))
+                                .Where(i => input.Item1.Contains(i)).Sum(i => 999999))
+            ))(new Func<string[], (HashSet<int>, HashSet<int>, List<System.Drawing.Point>)>(input =>
+                (   new HashSet<int>(Enumerable.Range(0, input.Length).Where(i => input[i].All(c => c == '.'))),
+                    new HashSet<int>(Enumerable.Range(0, input[0].Length).Where(i => input.All(line => line[i] == '.'))),
+                    Enumerable.Range(0, input.Length * input[0].Length)
+                        .Select(i => new System.Drawing.Point(i % input[0].Length, i/input[0].Length))
+                        .Where(p => input[p.Y][p.X] == '#')
+                        .ToList()
+                ))(File.ReadAllLines("input11.txt"))
+            )
 }));
 
 
