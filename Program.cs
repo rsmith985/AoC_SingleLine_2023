@@ -290,7 +290,9 @@
                         .Where(p => input[p.Y][p.X] == '#')
                         .ToList()
                 ))(File.ReadAllLines("input11.txt"))
-            )
+            ),
+        "15.1: " + 
+            File.ReadAllLines("input15.txt")[0].Split(',').Sum(i => i.ToArray().Aggregate(0, (a, b) => (a+b)*17%256))
 }));
 
 
