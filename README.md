@@ -2,6 +2,8 @@
 
 Goal is to solve as much of Advent of Code 2023 using only a single semicolon anywhere in the code.
 
+Update: As expected the problems got harder and I got busier.  For the most part only days 1-10 are done in 1 line.  All of my 'normal' code solutions can be found here - [https://github.com/rsmith985/AdventOfCode]
+
 Requirements:
 * Only 1 semicolon
 * Runs quickly/efficiently
